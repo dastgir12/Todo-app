@@ -1,5 +1,3 @@
-//here task is initial state , and action trigger through dispatch
-
 function taskReducer(tasks, action) {
     console.log("taskreducer");
     switch (action.type) {
@@ -18,7 +16,7 @@ function taskReducer(tasks, action) {
             return action.payload
         }
         case "REMOVE_TASK": {
-            return tasks.filter((task, index) => index !== action.id)
+            return tasks.filter((task, index) => task._id !== action.id)
         }
         case "MARK_DONE": {
             return tasks.map((task, index) => {

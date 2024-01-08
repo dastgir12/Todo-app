@@ -45,12 +45,16 @@ const addTask = async (req, res) => {
         )
 }
 const removeTask = (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params; // Use req.params to access parameters in the URL
     console.log("id: ", id);
+
     taskModel.findByIdAndDelete(id)
         .then(() => res.status(200).json({ message: "Task deleted successfully" }))
-        .catch((error) => res.status(501).json({ message: error.message }))
-}
+        .catch((error) => res.status(501).json({ message: error.message }));
+};
+
+
+
 
 const getTask = (req, res) => {
     taskModel.find({ userId: req.user.id })
