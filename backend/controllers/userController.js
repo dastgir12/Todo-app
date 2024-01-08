@@ -65,3 +65,5 @@ const registerUser = async (req,res) => {
     }
 }
 
+
+export {loginUser, registerUser}
