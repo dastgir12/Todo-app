@@ -83,7 +83,24 @@ const updateTask = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-//mark as done functionality
 
 
-export { addTask, getTask,removeTask ,updateTask}
+// mark as done functionalty:
+const markDone = async (req, res) => {
+    const taskId = req.params.id;
+  
+    try {
+      const task = await taskModel.findByIdAndUpdate(taskId, { completed: true }, { new: true });
+  
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+  
+      res.status(200).json({ message: 'Task marked as done', task });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
+
+export { addTask, getTask,removeTask ,updateTask ,markDone}

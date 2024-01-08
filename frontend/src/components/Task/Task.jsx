@@ -91,12 +91,26 @@ const nav = useNavigate()
     setModalVisible(false);
   };
 
-  const handleMarkDone = () => {
-    dispatch({
-      type: "MARK_DONE",
-      id,
-    });
+  const handleMarkDone = async () => {
+    try {
+      const res = await axios.put(`/task/markDone/${task._id}`,null, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+  
+      console.log(res.data);
+  
+      // Update the task in local state
+      dispatch({
+        type: "MARK_DONE",
+        id: task._id,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
 
   return (
     <div className="bg-slate-300 py-4 rounded-lg shadow-md flex items-center justify-center gap-2 mb-3">
@@ -134,7 +148,8 @@ const nav = useNavigate()
 
       {/* Modal for Editing */}
       <Modal
-        title="Edit Task"
+      
+        title="Update Todo"
         visible={isModalVisible}
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
@@ -142,17 +157,22 @@ const nav = useNavigate()
           <Button key="cancel" onClick={handleCancelEdit}>
             Cancel
           </Button>,
-          <Button key="save" type="primary" onClick={handleSaveEdit}>
-            Save
+          <Button key="save" type="primary" onClick={handleSaveEdit} className="bg-blue-600 text-black">
+            update
           </Button>,
         ]}
       >
+        <label htmlFor="">Title</label>
         <Input
-          className="mb-5"
+          className="mb-5 rounded shadow"
           value={editedTitle}
           onChange={(e) => setEditedTitle(e.target.value)}
         />
+        <label htmlFor="">Description</label>
+
         <Input.TextArea
+          className="rounded shadow"
+
           value={editedDescription}
           onChange={(e) => setEditedDescription(e.target.value)}
           rows={3}

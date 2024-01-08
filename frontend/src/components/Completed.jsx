@@ -12,7 +12,7 @@ function Completed() {
                             task.completed && <CompletedTask
                                 key={index}
                                 task={task}
-                                id={index}
+                                id={task._id}
                             />
                         )
                     })

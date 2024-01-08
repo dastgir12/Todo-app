@@ -33,7 +33,7 @@ function taskReducer(tasks, action) {
           }
         case "MARK_DONE": {
             return tasks.map((task, index) => {
-                if (index === action.id) {
+                if (task._id === action.id) {
                     return {
                         ...task,
                         completed: !task.completed
