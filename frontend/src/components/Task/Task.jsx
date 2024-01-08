@@ -4,14 +4,15 @@ import moment from "moment";
 import "./task.css";
 import { useContext } from "react";
 import TaskContext from "../../context/TaskContext";
-import { Modal, Button, Input, TextArea } from "antd"; // Import Ant Design components
+import { Modal, Button, Input, Space } from "antd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import TokenContext from "../../context/TokenContext";
-
+import { useNavigate } from 'react-router-dom';
 const { confirm } = Modal;
-
 function Task({ task, id }) {
+const nav = useNavigate()
+
   const { dispatch } = useContext(TaskContext);
   const { userToken } = useContext(TokenContext);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -55,15 +56,38 @@ function Task({ task, id }) {
   };
 
   const handleSaveEdit = async () => {
-    // Perform the save edit logic, e.g., make a PUT request to update the task
-    // ...
-
-    // After saving the edit, close the modal
-    setModalVisible(false);
+    try {
+      const res = await axios.put(
+        `/task/updateTask/${task._id}`,
+        {
+          title: editedTitle,
+          description: editedDescription,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+  
+      console.log(res.data);
+  
+      // Update the task in local state
+      dispatch({
+        type: "UPDATE_TASK",
+        id: task._id,
+        title: editedTitle,
+        description: editedDescription,
+      });
+  
+      setModalVisible(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
+  
 
   const handleCancelEdit = () => {
-    // Cancel the edit, close the modal
     setModalVisible(false);
   };
 
@@ -87,7 +111,7 @@ function Task({ task, id }) {
       <div className="task-info text-slate-900 text-sm w-10/12">
         <h4 className="task-title text-lg capitalize">{task.title}</h4>
         <p className="task-description">{task.description}</p>
-        <div className=" italic opacity-60">
+        <div className="italic opacity-60">
           {task?.createdAt ? (
             <p>{moment(task.createdAt).fromNow()}</p>
           ) : (
@@ -95,7 +119,7 @@ function Task({ task, id }) {
           )}
         </div>
       </div>
-      <div className="action-buttons text-sm text-white d-flex ">
+      <Space size="middle">
         <DeleteIcon
           style={{ fontSize: 30, cursor: "pointer" }}
           onClick={showDeleteConfirm}
@@ -106,7 +130,7 @@ function Task({ task, id }) {
           onClick={handleEdit}
           className="action-btn bg-blue-700 rounded-full border-2 shadow-2xl border-white p-1"
         />
-      </div>
+      </Space>
 
       {/* Modal for Editing */}
       <Modal
@@ -124,7 +148,7 @@ function Task({ task, id }) {
         ]}
       >
         <Input
-        className="mb-5"
+          className="mb-5"
           value={editedTitle}
           onChange={(e) => setEditedTitle(e.target.value)}
         />

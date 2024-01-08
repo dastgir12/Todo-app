@@ -18,6 +18,19 @@ function taskReducer(tasks, action) {
         case "REMOVE_TASK": {
             return tasks.filter((task, index) => task._id !== action.id)
         }
+
+        case "UPDATE_TASK": {
+            return tasks.map((task) => {
+              if (task._id === action.id) {
+                return {
+                  ...task,
+                  title: action.title,
+                  description: action.description,
+                };
+              }
+              return task;
+            });
+          }
         case "MARK_DONE": {
             return tasks.map((task, index) => {
                 if (index === action.id) {

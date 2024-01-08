@@ -61,7 +61,29 @@ const getTask = (req, res) => {
 
 
 //edit task functionality
+
+const updateTask = async (req, res) => {
+    const taskId = req.params.id;
+    const { title, description } = req.body;
+
+    try {
+        // Find the task by ID and update it
+        const updatedTask = await taskModel.findByIdAndUpdate(
+            taskId,
+            { title, description },
+            { new: true } // Return the updated task
+        );
+
+        if (!updatedTask) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        res.status(200).json({ message: 'Task updated successfully', updatedTask });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 //mark as done functionality
 
 
-export { addTask, getTask,removeTask }
+export { addTask, getTask,removeTask ,updateTask}
