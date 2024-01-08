@@ -53,12 +53,15 @@ const removeTask = (req, res) => {
         .catch((error) => res.status(501).json({ message: error.message }));
 };
 
-
-
-
 const getTask = (req, res) => {
     taskModel.find({ userId: req.user.id })
         .then((data) => res.status(200).json(data))
         .catch((error) => res.status(501).json({ message: error.message }))
 }
+
+
+//edit task functionality
+//mark as done functionality
+
+
 export { addTask, getTask,removeTask }
